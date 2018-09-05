@@ -1,0 +1,41 @@
+@supports (--css: variables) {
+  .range-slider input[type="range"] {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .range-slider input[type="range"].original {
+    position: absolute;
+  }
+
+  .range-slider input[type="range"].original::-webkit-slider-thumb {
+    position: relative;
+    z-index: 2;
+  }
+
+  .range-slider input[type="range"] {
+    position: relative;
+    background: var(--track-background);
+    --track-background:
+      linear-gradient(to right, transparent var(--low), var(--range-color) 0, var(--range-color) var(--high), transparent 0) no-repeat 0 45% / 100% 40%;
+    --range-color: #42a2da;
+  }
+
+  .range-slider input[type="range"]::-webkit-slider-runnable-track {
+    background: var(--track-background);
+  }
+
+  .range-slider .info {
+    position: absolute;
+    margin-left: var(--pos);
+    padding-top: 25px;
+  }
+
+  .range-slider .info-max {
+    position: absolute;
+    text-align: right;
+    padding-top: 25px;
+  }
+}

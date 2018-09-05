@@ -1,0 +1,8 @@
+<div class="range-slider">
+  <span>{{min}}</span>
+  <span class="info" #minOut>{{minValue}}</span>
+  <input class="original" type="range" name="{{name}}" min="{{min}}" max="{{max}}" step="{{step}}" [(ngModel)]="minValue">
+  <input #dragger type="range" name="{{name}}" min="{{min}}" max="{{max}}" step="{{step}}" [(ngModel)]="maxValue">
+  <span class="info-max" #maxOut>{{maxValue}}</span>
+  <span>{{max}}</span>
+</div>
