@@ -2,23 +2,18 @@ import {
   Component, Input, Output, EventEmitter,
   ElementRef, OnInit, HostListener, SimpleChanges, OnChanges
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-temp-slider',
-  templateUrl: './temp-slider.component.html',
-  styleUrls: ['./temp-slider.component.css']
+  selector: 'app-single-slider',
+  templateUrl: './single-slider.component.html',
+  styleUrls: ['./single-slider.component.css']
 })
-export class TempSliderComponent implements OnInit, OnChanges {
 
-  editSliderForm: FormGroup;
+export class SingleSliderComponent implements OnInit, OnChanges {
 
   private sliderModel = [0, 0, 0];
-  private baseValueModel = [0, 0, 0];
   private sliderWidth = 0;
-  private sliderBaseWidth = 0;
   private totalLength = 0;
-  private totalBaseLength = 0;
   private startClientX = 0;
   private startPleft = 0;
   private startPRight = 0;
@@ -27,20 +22,14 @@ export class TempSliderComponent implements OnInit, OnChanges {
   private minSelected: number;
   private maxSelected: number;
   private step: number;
-  private baseStep: number;
-  private firstBase: number;
-  private secondBase: number;
 
   public initValues: number[] = [];
   public currentValues: number[] = [0, 0];
-  public baseValues: number[] = [0, 0];
-  public handlerX: number[] = [0, 0, 0];
-  public baseHandlerX: number[] = [0, 0, 0];
+  public handlerX: number[] = [0, 0];
   public isHandlerActive = false;
   public isTouchEventStart = false;
   public isMouseEventStart = false;
   public currentHandlerIndex = 0;
-  public baseIndex = 0;
 
   constructor(private el: ElementRef) {
   }
@@ -72,29 +61,10 @@ export class TempSliderComponent implements OnInit, OnChanges {
       this.maxSelected = Number(value);
     }
   }
-  @Input('firstBase')
-  set setFirstBaseValues(value: number) {
-    if (!isNaN(value) && this.isNullOrEmpty(this.firstBase)) {
-      this.firstBase = Number(value);
-    }
-  }
-
-  @Input('secondBase')
-  set setSecondBaseValues(value: number) {
-    if (!isNaN(value) && this.isNullOrEmpty(this.secondBase)) {
-      this.secondBase = Number(value);
-    }
-  }
   @Input('step')
   set stepValue(value: number) {
     if (!isNaN(value)) {
       this.step = Number(value);
-    }
-  }
-  @Input('baseStep')
-  set baseStepValue(value: number) {
-    if (!isNaN(value)) {
-      this.baseStep = Number(value);
     }
   }
 
@@ -102,7 +72,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initializeSlider();
-    this.initializeBase();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -117,10 +86,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
     this.sliderWidth = this.el.nativeElement.children[0].children[0].offsetWidth;
     this.resetModel();
   }
-  public initializeBase() {
-    this.sliderBaseWidth = this.el.nativeElement.children[0].children[0].offsetWidth;
-    this.resetBaseModel();
-  }
   private resetModel() {
     this.validateSliderValues();
     this.sliderModel = [
@@ -130,16 +95,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
     ];
     this.totalLength = this.sliderModel.reduce((prevValue, curValue) => prevValue + curValue, 0);
     this.setHandlerPosition();
-  }
-  private resetBaseModel() {
-    this.validateBaseValues();
-    this.baseValueModel = [
-      this.baseValues[0] - this.initValues[0],
-      this.baseValues[1] - this.baseValues[0],
-      this.initValues[1] - this.baseValues[1]
-    ];
-    this.totalBaseLength = this.baseValueModel.reduce((prevValue, curValue) => prevValue + curValue, 0);
-    this.setBaseValuePosition();
   }
   private validateSliderValues() {
     if (this.isNullOrEmpty(this.minValue) || this.isNullOrEmpty(this.maxValue)) {
@@ -151,25 +106,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
     } else {
       this.initValues = [this.minValue, this.maxValue];
       this.updateCurrentValue([this.minSelected, this.maxSelected], true);
-    }
-  }
-  private validateBaseValues() {
-    if (this.isNullOrEmpty(this.minValue) || this.isNullOrEmpty(this.maxValue)) {
-      this.updateInitValues([0, 0]);
-      this.updateBaseValue([0, 0], true);
-    } else if (this.minValue > this.maxValue) {
-      this.updateInitValues([0, 0]);
-      this.updateBaseValue([0, 0], true);
-    } else {
-      this.initValues = [this.minValue, this.maxValue];
-      this.updateBaseValue([this.firstBase, this.secondBase], true);
-    }
-  }
-  private updateBaseValue(arrayValue: number[], privateChange: boolean = false) {
-    this.firstBase = this.baseValues[0] = arrayValue[0];
-    this.secondBase = this.baseValues[1] = arrayValue[1];
-    if (!privateChange) {
-      this.Change.emit(this.baseValues);
     }
   }
   private updateCurrentValue(arrayValue: number[], privateChange: boolean = false) {
@@ -192,17 +128,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
     for (let i = 0, len = this.sliderModel.length - 1; i < len; i++) {
       runningTotal += this.sliderModel[i];
       this.handlerX[i] = (runningTotal / this.totalLength) * 100;
-    }
-  }
-  private setBaseValuePosition() {
-    let posBaseTotal = 0;
-    this.updateBaseValue([
-      this.initValues[0] + this.baseValueModel[0],
-      this.initValues[1] - this.baseValueModel[2]
-    ]);
-    for (let i = 0, len = this.baseValueModel.length - 1; i < len; i++) {
-      posBaseTotal += this.baseValueModel[i];
-      this.baseHandlerX[i] = (posBaseTotal / this.totalLength) * 100;
     }
   }
   private setModelValue(index: number, value: number) {
@@ -237,24 +162,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
       this.isHandlerActive = true;
     }
   }
-  public setBaseHandlerActive(event: any, baseHandlerIndex: number) {
-    event.preventDefault();
-    if (event.clientX) {
-      this.startClientX = event.clientX;
-      this.isMouseEventStart = true;
-      this.isTouchEventStart = false;
-    } else if (event.deltaX) {
-      this.startClientX = event.deltaX;
-      this.isTouchEventStart = true;
-      this.isMouseEventStart = false;
-    }
-    if (this.isMouseEventStart || this.isTouchEventStart) {
-      this.baseIndex = baseHandlerIndex;
-      this.startPleft = this.sliderModel[baseHandlerIndex];
-      this.startPRight = this.sliderModel[baseHandlerIndex + 1];
-      this.isHandlerActive = false;
-    }
-  }
   public handlerSliding(event: any) {
     if ((this.isMouseEventStart && event.clientX) || (this.isTouchEventStart && event.deltaX)) {
       const movedX = ((event.clientX || event.deltaX) - this.startClientX) / this.sliderWidth * this.totalLength;
@@ -264,16 +171,6 @@ export class TempSliderComponent implements OnInit, OnChanges {
         this.setModelValue(this.currentHandlerIndex, nextPLeft);
         this.setModelValue(this.currentHandlerIndex + 1, nextPRight);
         this.setHandlerPosition();
-      }
-    }
-  }
-  public baseHandlerSliding(event: any) {
-    if ((this.isMouseEventStart && event.clientX) || (this.isTouchEventStart && event.deltaX)) {
-      const movedX = ((event.clientX || event.deltaX) - this.startClientX) / this.sliderBaseWidth * this.totalBaseLength;
-      const nextPLeft = this.startPleft + movedX;
-      const nextPRight = this.startPRight - movedX;
-      if (nextPLeft >= 0 && nextPRight >= 0) {
-        this.setBaseValuePosition();
       }
     }
   }
