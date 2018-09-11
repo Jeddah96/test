@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+@mixin palette ($color,
+$bg) {
+  color: $color;
+  background: $bg;
+}
+
+@mixin pos ($top,
+$right,
+$bot,
+$left) {
+  top: $top;
+  right: $right;
+  bottom: $bot;
+  left: $left;
+}
+
+@mixin handling ($pos,
+$display) {
+  position: $pos;
+  display: $display;
+}
+
+@mixin size ($width,
+$height) {
+  width: $width;
+  height: $height;
+}
+
+.slider * {
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.slider {
+  @include size (100%,
+  30px);
+  display: block;
+  padding: 4px 10px;
+  cursor: default;
+  font-size: 12px;
+
+  .values {
+    display: block;
+    font-weight: bold;
+    margin-top: 4px;
+    width: max-content;
+    margin-left: -2%;
+    color: #ffffff;
+
+    div {
+      &:first-child {
+        float: left;
+      }
+
+      &:last-child {
+        float: right;
+      }
+    }
+  }
+
+  .slider__nav-bar {
+    @include size (100%,
+    10px);
+    background: #d8d8d8;
+    position: relative;
+
+    div {
+      .filler {
+        display: block;
+        @include size (100%,
+        100%);
+        position: relative;
+        overflow: hidden;
+      }
+    }
+
+    &>div.slider__right-handle,
+    div.slider__left-handle {
+      @include palette(inherit,
+      #33b5e6);
+      @include handling (absolute,
+      inline-block);
+      @include size (22px,
+      22px);
+      border: 7px solid #33b5e6;
+      border-radius: 50%;
+      top: -7px;
+      margin-left: -10px;
+      z-index: 1;
+      cursor: pointer;
+      transition: left 0.2s ease;
+
+      &:hover {
+        &>.slider__handle-popover {
+          opacity: 1;
+        }
+      }
+
+      .active {
+        &>.slider__handle-popover {
+          opacity: 1;
+        }
+      }
+
+      .last-active {
+        z-index: 2;
+      }
+
+      .slider__handle-popover {
+        @include palette(#66686c,
+        #fff);
+        @include pos(-40px,
+        none,
+        none,
+        -18px);
+        @include handling (absolute,
+        block);
+        border: 1px solid #33b5e6;
+        padding: 3px 4px;
+        min-width: 55px;
+        text-align: center;
+        font-weight: bold;
+        transition: opacity 0.2s ease;
+        opacity: 1;
+
+        &:after {
+          @include pos(100%,
+          none,
+          none,
+          34%);
+          content: "";
+          border: 5px solid transparent;
+          border-top-color: #fff;
+          position: absolute;
+        }
+      }
+
+      .slider__popover-data {
+        &:after {
+          content: "";
+          border: 6px solid transparent;
+          border-top-color: #33b5e6;
+          position: absolute;
+          @include pos(100%,
+          none,
+          none,
+          33%);
+        }
+      }
+    }
+  }
+
+  .slider__base-handlers {
+    @include size (100%,
+    5px);
+    position: relative;
+    z-index: 100;
+
+    &>div.handle__first-base {
+      @include palette(inherit,
+      #fff);
+      @include handling (absolute,
+      inline-block);
+      @include size (11px,
+      11px);
+      border: solid 1px #195a72;
+      border-radius: 50%;
+      top: -11px;
+      margin-left: -10px;
+      z-index: 1;
+      cursor: pointer;
+      transition: left 0.2s ease;
+    }
+
+    &>div.handle__second-base {
+      @include palette(inherit,
+      #191716);
+      @include handling (absolute,
+      inline-block);
+      height: 22px;
+      border: 1px solid #191716;
+      top: -16px;
+      margin-left: -10px;
+      z-index: 1;
+      cursor: pointer;
+      transition: left 0.2s ease;
+    }
+
+    &>.handle__base-popover {
+      @include handling (relative,
+      block);
+      float: right;
+      top: -17px;
+      left: 98px;
+      padding: 3px 4px;
+      min-width: 55px;
+      text-align: center;
+      background: #ffffff;
+      color: #66686c;
+      font-weight: bold;
+      transition: opacity 0.2s ease;
+      opacity: 1;
+
+      .slider__base-title {
+        font-weight: 600;
+        color: #66686c;
+        display: inline;
+      }
+    }
+  }
+}
+
+.slider .slider__nav-bar div.filler>div {
+  @include handling (absolute,
+  inline-block);
+  height: 100%;
+  top: 0;
+  background: #33b5e6;
+  transition: all 0.2s ease;
+}

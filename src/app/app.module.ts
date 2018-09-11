@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, FormGroup, FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

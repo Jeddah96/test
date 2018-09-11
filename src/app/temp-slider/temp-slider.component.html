@@ -1,32 +1,38 @@
 <div class="slider">
-  <div class="bar" (mousemove)="handlerSliding($event)" (panmove)="handlerSliding($event)">
-    <span class="left-handle" [ngClass]="{'active':isHandlerActive&&currentHandlerIndex==0,'last-active':currentHandlerIndex==0}"
-      [style.left.%]="handlerX[0]" (mousedown)="setHandlerActive($event,0)" (panstart)="setHandlerActive($event,0)">
-      <span class="handle-tooltip">
-        <span class="handle-tooltip2">{{currentValues[0].toFixed(1)}} %</span>
-      </span>
-    </span>
-    <div class="filler">
-      <span [style.left.%]="handlerX[0]" [style.width.%]="handlerX[1] - handlerX[0]"></span>
-    </div>
-    <span class="right-handle" [ngClass]="{'active':isHandlerActive&&currentHandlerIndex==1, 'last-active':currentHandlerIndex==1}"
-      [style.left.%]="handlerX[1]" (mousedown)="setHandlerActive($event,1)" (panstart)="setHandlerActive($event,1)">
-      <span class="handle-tooltip">
-        <span class="handle-tooltip2">{{currentValues[1].toFixed(1)}} %</span>
-      </span>
-    </span>
-  </div>
-  <div class="slider__base-handlers">
-    <span class="handle__first-base" [style.left.%]="baseHandlerX[0]">
-    </span>
-    <span class="handle__second-base" [style.left.%]="baseHandlerX[1]">
-    </span>
-    <span class="handle__base-tooltip"><span class="slider__base-title">BASE</span> {{baseValues[0].toFixed(1)}} %</span>
-  </div>
-</div>
-<!-- <form [formGroup]="editSliderForm" (ngSubmit)="onSubmit()">
-    <input type="number" value="{{minSelected.toFixed(1)}}">
-    <input type="number" value="{{maxSelected.toFixed(1)}}">
-    <button type="submit">Submit</button>
-</form> -->
 
+  <div class="slider__nav-bar" (mousemove)="handlerSliding($event)" (panmove)="handlerSliding($event)">
+
+    <div class="slider__left-handle" [ngClass]="{'active':isHandlerActive&&currentHandlerIndex==0,'last-active':currentHandlerIndex==0}"
+      [style.left.%]="handlerX[0]" (mousedown)="setHandlerActive($event,0)" (panstart)="setHandlerActive($event,0)">
+      <div class="slider__handle-popover">
+        <div class="slider__popover-data">{{currentValues[0].toFixed(1)}} %</div>
+      </div>
+    </div>
+
+    <div class="filler">
+      <div class="step-indicators">
+        <span *ngFor="let stepPos of stepIndicatorPositions" [style.left.px]="stepPos"></span>
+      </div>
+      <div class="slider__handler-filler" [style.left.%]="handlerX[0]" [style.width.%]="handlerX[1] - handlerX[0]"></div>
+    </div>
+
+    <div class="slider__right-handle" [ngClass]="{'active':isHandlerActive&&currentHandlerIndex==1, 'last-active':currentHandlerIndex==1}"
+      [style.left.%]="handlerX[1]" (mousedown)="setHandlerActive($event,1)" (panstart)="setHandlerActive($event,1)">
+      <div class="slider__handle-popover">
+        <div class="slider__popover-data">{{currentValues[1].toFixed(1)}} %</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slider__base-handlers">
+    <div class="handle__first-base" [style.left.%]="baseHandlerX[0]">
+    </div>
+    <div class="handle__second-base" [style.left.%]="baseHandlerX[1]">
+    </div>
+    <div class="handle__base-popover">
+      <div class="slider__base-title">BASE</div> {{baseValues[0].toFixed(1)}} %
+    </div>
+  </div>
+
+</div>
